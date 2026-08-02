@@ -18,43 +18,15 @@ jobs:
         with:
           node-version: 18
 
-      - name: Setup Projects and Build EXE
+      - name: Install Dependencies
         run: |
           npm init -y
           npm install electron electron-builder --save-dev
-          
-          node -e "
-          const fs = require('fs');
-          
-          // Create main.js file
-          const mainJs = \`const { app, BrowserWindow } = require('electron');
-          function createWindow () {
-            const win = new BrowserWindow({
-              width: 1200,
-              height: 800,
-              autoHideMenuBar: true,
-              webPreferences: { nodeIntegration: true }
-            });
-            win.loadFile('index.html');
-          }
-          app.whenReady().then(createWindow);\`;
-          
-          fs.writeFileSync('main.js', mainJs);
-          
-          // Update package.json
-          const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
-          pkg.main = 'main.js';
-          pkg.build = {
-            appId: 'com.nexura.desktop',
-            productName: 'Nexura',
-            win: { target: 'portable' }
-          };
-          fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2));
-          "
-          
-          npx electron-builder --win portable
 
-      - name: Upload Windows EXE
+      - name: Execute Build Script
+        run: node build-script.js
+
+      - name: Upload Windows EXE Artifact
         uses: actions/upload-artifact@v4
         with:
           name: Nexura-Windows-EXE
