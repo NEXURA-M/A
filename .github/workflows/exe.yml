@@ -18,15 +18,16 @@ jobs:
         with:
           node-version: 18
 
-      - name: Prepare Package Files
+      - name: Setup Projects and Build EXE
         run: |
           npm init -y
           npm install electron electron-builder --save-dev
-
-      - name: Create Electron Main File
-        run: |
-          @'
-          const { app, BrowserWindow } = require('electron');
+          
+          node -e "
+          const fs = require('fs');
+          
+          // Create main.js file
+          const mainJs = \`const { app, BrowserWindow } = require('electron');
           function createWindow () {
             const win = new BrowserWindow({
               width: 1200,
@@ -36,19 +37,21 @@ jobs:
             });
             win.loadFile('index.html');
           }
-          app.whenReady().then(createWindow);
-          '@ | Out-File -FilePath main.js -Encoding utf8
-
-      - name: Build Executable
-        run: |
-          $pkg = Get-Content package.json | ConvertFrom-Json
-          $pkg.main = "main.js"
-          $pkg | Add-Member -MemberType NoteProperty -Name "build" -Value @{
-            appId = "com.nexura.desktop"
-            productName = "Nexura"
-            win = @{ target = "portable" }
-          } -Force
-          $pkg | ConvertTo-Json -Depth 10 | Out-File package.json -Encoding utf8
+          app.whenReady().then(createWindow);\`;
+          
+          fs.writeFileSync('main.js', mainJs);
+          
+          // Update package.json
+          const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+          pkg.main = 'main.js';
+          pkg.build = {
+            appId: 'com.nexura.desktop',
+            productName: 'Nexura',
+            win: { target: 'portable' }
+          };
+          fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2));
+          "
+          
           npx electron-builder --win portable
 
       - name: Upload Windows EXE
