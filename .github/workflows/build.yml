@@ -1,4 +1,4 @@
-name: Build Clean APK
+name: Build Clean APK with Icon
 
 on:
   push:
@@ -24,11 +24,23 @@ jobs:
         with:
           node-version: 18
 
-      - name: Install Cordova & Build APK
+      - name: Install Cordova & Build APK with Icon
         run: |
           npm install -g cordova
-          cordova create app com.nexura.app Nexura
+          
+          # 1. Create Cordova project with Lyramoon AI
+          cordova create app com.lyramoon.ai "Lyramoon AI"
+          
+          # 2. Copy Web Source
           cp index.html app/www/
+          
+          # 3. Add Custom Icon to Config if icon.png exists
+          if [ -f "icon.png" ]; then
+            cp icon.png app/www/icon.png
+            sed -i '/<\/widget>/i \    <icon src="www/icon.png" />' app/config.xml
+          fi
+          
+          # 4. Add Android Platform & Build
           cd app
           cordova platform add android
           cordova build android --debug
@@ -36,5 +48,5 @@ jobs:
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: Nexura-AdFree-APK
+          name: Lyramoon-AI-APK
           path: app/platforms/android/app/build/outputs/apk/debug/app-debug.apk
