@@ -28,8 +28,8 @@ jobs:
         run: |
           npm install -g cordova
           
-          # 1. Create Cordova project with Lyramoon AI
-          cordova create app com.lyramoon.ai "Lyramoon AI"
+          # 1. Create Cordova project with Lyramoon 
+          cordova create app com.lyramoon.ai "Lyramoon"
           
           # 2. Copy Web Source
           cp index.html app/www/
