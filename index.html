@@ -1,132 +1,950 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta name="google-site-verification" content="1NRG9AxOq3yo2406lyqzessDKTQD1ikumDe8GtKsUpg" />
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NEXURA | Muhammad Taqi</title>
+    <title>LYRA MOON AI</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700&display=swap');
-
         :root {
-            --neon-blue: #00f2ff;
-            --bg: #050505;
-            --glass: rgba(255, 255, 255, 0.05);
+            --bg: #0a0a14;
+            --surface: #12122a;
+            --surface2: #1a1a3a;
+            --accent: #c9a0ff;
+            --accent2: #7b6bff;
+            --gold: #f0d78c;
+            --text: #e8e8f0;
+            --text2: #b0b0c8;
+            --moon-glow: #ffe0b0;
+            --star: #ffffff;
+            --danger: #ff6b7a;
+            --success: #5ef7c0;
+            --border: #2a2a4a;
+            --radius: 20px;
+            --radius-sm: 12px;
+            --shadow: 0 8px 40px rgba(100, 80, 200, 0.15);
+            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
         body {
-            margin: 0;
+            font-family: 'Segoe UI', 'Inter', system-ui, -apple-system, sans-serif;
             background: var(--bg);
-            color: white;
-            font-family: 'Outfit', sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            color: var(--text);
             min-height: 100vh;
-            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+            background-image:
+                radial-gradient(ellipse at 20% 20%, rgba(120, 100, 220, 0.08) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 70%, rgba(180, 140, 240, 0.06) 0%, transparent 60%),
+                radial-gradient(ellipse at 50% 50%, rgba(40, 30, 80, 0.3) 0%, transparent 80%);
         }
 
-        .card {
-            background: var(--glass);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--neon-blue);
-            padding: 40px;
-            border-radius: 30px;
-            text-align: center;
-            max-width: 500px;
+        .stars-container {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
-            box-shadow: 0 10px 40px rgba(0, 242, 255, 0.15);
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
         }
-
-        /* Image Framing */
-        .image-frame {
-            width: 150px;
-            height: 150px;
+        .star {
+            position: absolute;
+            background: var(--star);
             border-radius: 50%;
-            border: 3px solid var(--neon-blue);
-            margin: 0 auto 20px auto;
+            animation: twinkle var(--dur) ease-in-out infinite;
+            animation-delay: var(--delay);
+            opacity: 0;
+        }
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; transform: scale(1); }
+            30% { opacity: 1; transform: scale(1.6); }
+            60% { opacity: 0.4; transform: scale(0.8); }
+            85% { opacity: 0.9; transform: scale(1.3); }
+        }
+
+        .main-container {
+            position: relative;
+            z-index: 1;
+            width: 95%;
+            max-width: 700px;
+            background: var(--surface);
+            border-radius: 28px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow), 0 0 80px rgba(100, 70, 200, 0.1);
+            padding: 0;
             overflow: hidden;
-            box-shadow: 0 0 20px var(--neon-blue);
+            animation: fadeInUp 0.7s ease-out;
         }
-        .image-frame img { width: 100%; height: 100%; object-fit: cover; }
-
-        h1 { margin: 0; color: var(--neon-blue); font-size: 2.5rem; }
-        h2 { font-weight: 300; font-size: 1rem; opacity: 0.8; margin-bottom: 20px; }
-        
-        .role-box {
-            background: rgba(0,0,0,0.4);
-            padding: 15px;
-            border-radius: 15px;
-            margin-bottom: 25px;
-            font-size: 0.9rem;
-            line-height: 1.6;
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .btn {
-            display: block;
-            width: 100%;
-            padding: 15px;
-            background: var(--neon-blue);
-            color: black;
-            border-radius: 10px;
+        .header {
+            background: linear-gradient(180deg, rgba(30, 25, 60, 0.95) 0%, rgba(20, 18, 45, 0.9) 100%);
+            padding: 24px 28px 20px;
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
+        }
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 120px;
+            background: radial-gradient(circle, rgba(240, 215, 140, 0.25) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: moonPulse 3s ease-in-out infinite;
+        }
+        @keyframes moonPulse {
+            0%, 100% { transform: translateX(-50%) scale(1); opacity: 0.7; }
+            50% { transform: translateX(-50%) scale(1.25); opacity: 1; }
+        }
+        .moon-icon {
+            font-size: 52px;
+            display: inline-block;
+            animation: float 4s ease-in-out infinite;
+            position: relative;
+            z-index: 1;
+            filter: drop-shadow(0 0 20px rgba(255, 220, 150, 0.5));
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .header h1 {
+            font-size: 2rem;
             font-weight: 700;
+            letter-spacing: 1px;
+            background: linear-gradient(135deg, #e8d5ff, #f0d78c, #c9a0ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 4px 0 2px;
+            position: relative;
+            z-index: 1;
+        }
+        .header .subtitle {
+            font-size: 0.8rem;
+            color: var(--text2);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            position: relative;
+            z-index: 1;
+        }
+
+        .chat-area {
+            padding: 20px 24px;
+            max-height: 420px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            scroll-behavior: smooth;
+            min-height: 180px;
+        }
+        .chat-area::-webkit-scrollbar { width: 5px; }
+        .chat-area::-webkit-scrollbar-track { background: transparent; }
+        .chat-area::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
+
+        .message {
+            display: flex;
+            gap: 10px;
+            animation: slideIn 0.4s ease-out;
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .message.user { flex-direction: row-reverse; }
+        .message-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+        .message.ai .message-avatar { background: rgba(180, 150, 240, 0.2); color: var(--accent); }
+        .message.user .message-avatar { background: rgba(240, 215, 140, 0.2); color: var(--gold); }
+        .message-bubble {
+            background: var(--surface2);
+            padding: 14px 18px;
+            border-radius: 18px;
+            border: 1px solid var(--border);
+            max-width: 85%;
+            word-break: break-word;
+            line-height: 1.5;
+            font-size: 0.95rem;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+        }
+        .message.user .message-bubble {
+            background: rgba(120, 100, 200, 0.2);
+            border-color: rgba(160, 140, 220, 0.4);
+        }
+        .message-bubble a {
+            color: #7ecbff;
             text-decoration: none;
-            margin-bottom: 10px;
-            transition: 0.3s;
-            border: none;
+            font-weight: 500;
+            transition: var(--transition);
+            word-break: break-all;
+            display: inline-block;
+            margin: 3px 0;
             cursor: pointer;
         }
-        .btn:hover { transform: scale(1.02); box-shadow: 0 0 20px var(--neon-blue); }
-        #voice-status { margin-top: 15px; font-size: 0.8rem; color: var(--neon-blue); height: 20px; }
+        .message-bubble a:hover {
+            color: #a0dfff;
+            text-decoration: underline;
+            text-shadow: 0 0 10px rgba(130, 180, 255, 0.5);
+        }
+        .link-card {
+            display: block;
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 12px 16px;
+            margin: 6px 0;
+            transition: var(--transition);
+            cursor: pointer;
+            text-decoration: none;
+            color: var(--text);
+        }
+        .link-card:hover {
+            border-color: var(--accent2);
+            box-shadow: 0 0 20px rgba(120, 100, 220, 0.3);
+            transform: translateY(-2px);
+        }
+        .link-card .link-icon { font-size: 1.3rem; margin-right: 8px; }
+        .badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            margin-left: 6px;
+        }
+        .badge-video { background: rgba(255, 100, 120, 0.2); color: #ff8a95; }
+        .badge-music { background: rgba(90, 220, 180, 0.2); color: #5ef7c0; }
+        .badge-large { background: rgba(255, 180, 60, 0.25); color: #ffc850; }
+
+        .iframe-container {
+            width: 100%;
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+            margin: 10px 0;
+            border: 2px solid var(--accent2);
+            box-shadow: 0 0 30px rgba(120, 100, 220, 0.3);
+            position: relative;
+            padding-top: 56.25%;
+        }
+        .iframe-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+            border-radius: 10px;
+        }
+
+        .input-area {
+            padding: 16px 20px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 10px;
+            background: rgba(15, 15, 35, 0.7);
+        }
+        .input-area input {
+            flex: 1;
+            padding: 14px 18px;
+            border-radius: 30px;
+            border: 2px solid var(--border);
+            background: var(--surface2);
+            color: var(--text);
+            font-size: 0.95rem;
+            outline: none;
+            transition: var(--transition);
+            font-family: inherit;
+        }
+        .input-area input:focus {
+            border-color: var(--accent2);
+            box-shadow: 0 0 20px rgba(120, 100, 220, 0.2);
+        }
+        .input-area input::placeholder { color: #6a6a8a; }
+        .btn-send {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: none;
+            background: linear-gradient(135deg, #8b70e0, #6b50c0);
+            color: #fff;
+            font-size: 1.3rem;
+            cursor: pointer;
+            transition: var(--transition);
+            flex-shrink: 0;
+            box-shadow: 0 4px 18px rgba(100, 70, 200, 0.35);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .btn-send:hover {
+            transform: scale(1.06);
+            box-shadow: 0 6px 25px rgba(120, 90, 220, 0.5);
+            background: linear-gradient(135deg, #9b80f0, #7b60d0);
+        }
+        .btn-send:active { transform: scale(0.94); transition: 0.1s; }
+
+        .credit-bar {
+            text-align: center;
+            padding: 12px 20px;
+            border-top: 1px solid var(--border);
+            background: rgba(10, 10, 30, 0.6);
+        }
+        .credit-bar a {
+            color: var(--gold);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+            transition: var(--transition);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 16px;
+            border-radius: 20px;
+            border: 1px solid transparent;
+        }
+        .credit-bar a:hover {
+            border-color: var(--gold);
+            box-shadow: 0 0 20px rgba(240, 215, 140, 0.3);
+            text-shadow: 0 0 10px rgba(240, 215, 140, 0.5);
+            background: rgba(240, 215, 140, 0.08);
+        }
+        .credit-bar .sparkle { font-size: 0.9rem; animation: float 2s ease-in-out infinite; }
+
+        .quick-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 8px 20px 4px;
+        }
+        .quick-tag {
+            padding: 6px 14px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            background: rgba(25, 25, 50, 0.7);
+            color: var(--text2);
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: var(--transition);
+            white-space: nowrap;
+            font-family: inherit;
+        }
+        .quick-tag:hover {
+            border-color: var(--accent2);
+            color: var(--text);
+            background: rgba(100, 80, 200, 0.2);
+            box-shadow: 0 0 12px rgba(100, 80, 200, 0.2);
+        }
+
+        @media (max-width: 500px) {
+            .main-container { width: 98%; border-radius: 18px; }
+            .header h1 { font-size: 1.4rem; }
+            .header { padding: 16px 14px 14px; }
+            .chat-area { padding: 14px 12px; max-height: 300px; gap: 10px; }
+            .message-bubble { font-size: 0.85rem; padding: 10px 14px; max-width: 92%; }
+            .input-area { padding: 10px 12px; gap: 6px; }
+            .input-area input { padding: 12px 14px; font-size: 0.85rem; }
+            .btn-send { width: 42px; height: 42px; font-size: 1.1rem; }
+            .quick-tags { padding: 6px 12px; gap: 5px; }
+            .quick-tag { padding: 5px 10px; font-size: 0.7rem; }
+        }
     </style>
 </head>
 <body>
+    <div class="stars-container" id="starsContainer"></div>
 
-<div class="card">
-    <div class="image-frame">
-        <!-- REPLACE THE SRC BELOW WITH YOUR IMAGE URL -->
-        <img src="https://yt3.ggpht.com/CRdTHCDMWDNbc75cMKKKoII4H_7L6kPB2gRcErgF1IBc7-7uat6PU7BhqaagjgPNUMODFGxudm2A_6s=s953-c-fcrop64=1,13160000ece9ffff-rw-nd-v1" alt="Muhammad Taqi">
+    <div class="main-container">
+        <div class="header">
+            <div class="moon-icon">🌙</div>
+            <h1>LYRA MOON AI</h1>
+            <p class="subtitle">✨ Your Cosmic Video & Music Companion ✨</p>
+        </div>
+
+        <div class="quick-tags" id="quickTags">
+            <button class="quick-tag" data-keyword="horse">🐴 Horse</button>
+            <button class="quick-tag" data-keyword="battle">⚔️ Battle</button>
+            <button class="quick-tag" data-keyword="girl">👧 Girl</button>
+            <button class="quick-tag" data-keyword="forest">🌲 Forest</button>
+            <button class="quick-tag" data-keyword="army">🪖 Army</button>
+            <button class="quick-tag" data-keyword="beautiful place">🏞️ Place</button>
+            <button class="quick-tag" data-keyword="race">🏇 Race</button>
+            <button class="quick-tag" data-keyword="king">👑 King</button>
+            <button class="quick-tag" data-keyword="large video">🎬 Large Video</button>
+            <button class="quick-tag" data-keyword="english happy song">🎵 Happy Song</button>
+            <button class="quick-tag" data-keyword="urdu sad song">💔 Urdu Sad</button>
+        </div>
+
+        <div class="chat-area" id="chatArea">
+            <div class="message ai">
+                <div class="message-avatar">🌙</div>
+                <div class="message-bubble">
+                    Hello! I'm <strong>Lyra Moon AI</strong> ✨<br>
+                    Type any <strong>keyword</strong> and I'll find a random video or song for you!<br>
+                    Try: <em>horse, battle, girl, forest, army, king, race, beautiful place, large video</em>, or ask for a <em>song</em> like <em>"english sad song"</em> or <em>"urdu happy song"</em>.
+                </div>
+            </div>
+        </div>
+
+        <div class="input-area">
+            <input type="text" id="userInput" placeholder="Type a keyword... (e.g., horse, battle, sad song, large video)" autocomplete="off">
+            <button class="btn-send" id="btnSend" title="Send">➤</button>
+        </div>
+
+        <div class="credit-bar">
+            <a href="https://nexura.oneapp.dev/" class="external-link" rel="noopener">
+                <span class="sparkle">💎</span> Created by <strong>MUHAMMAD TAQI</strong> <span class="sparkle">💎</span>
+            </a>
+        </div>
     </div>
-    
-    <h1>NEXURA</h1>
-    <h2>Muhammad Taqi</h2>
-    
-    <div class="role-box">
-        Full Stack Web & AI Developer<br>
-        Software Architect & Engineer<br>
-        Python & React Programmer
-    </div>
 
-    <a href="https://sites.google.com/view/nexura-app-store/home" class="btn">NEXURA APP STORE</a>   
-    <a href="https://sites.google.com/view/nexura-mt/home" class="btn">NEXURA OFFICIAL</a>   
-    <div id="voice-status"></div>
-</div>
+    <script>
+        (function() {
+            // ==================== DATA ====================
+            const VIDEO_DATA = {
+                'horse and human': [
+                    'https://www.meta.ai/share/m/LyK0N2xytF',
+                    'https://www.meta.ai/share/m/pP0N50dSx9',
+                    'https://www.meta.ai/share/m/OfnMnG2a9u',
+                    'https://www.meta.ai/share/m/K2PDrByGzA'
+                ],
+                'girl': [
+                    'https://www.meta.ai/share/m/o3zLYuP7o0',
+                    'https://www.meta.ai/share/m/yat2L5K8vZ',
+                    'https://www.meta.ai/share/m/FN7fBwminP',
+                    'https://www.meta.ai/share/m/HjTf7O7KsZ'
+                ],
+                'old man': [
+                    'https://www.meta.ai/share/m/sYIVMZTMk6',
+                    'https://www.meta.ai/share/m/L2WqcU7elo',
+                    'https://www.meta.ai/share/m/5tqjFzNDcl',
+                    'https://www.meta.ai/share/m/Oy59RYWAI9',
+                    'https://www.meta.ai/share/m/B2hLNgrjIa'
+                ],
+                'battle': [
+                    'https://www.meta.ai/share/m/Mr1bn0ZeuN',
+                    'https://www.meta.ai/share/m/kAfj78B9QH',
+                    'https://www.meta.ai/share/m/9v6XeflrHJ',
+                    'https://www.meta.ai/share/m/jqTrgiNqDm'
+                ],
+                'horse battle': [
+                    'https://www.meta.ai/share/m/WA348NlFvX',
+                    'https://www.meta.ai/share/m/lVbw865lyi'
+                ],
+                'army': [
+                    'https://www.meta.ai/share/m/kzMh30Svu9',
+                    'https://www.meta.ai/share/m/MwFX8irP7J',
+                    'https://www.meta.ai/share/m/CmG7HIu1g9',
+                    'https://www.meta.ai/share/m/lzizxuZMeo',
+                    'https://www.meta.ai/share/m/6S04yMceLd',
+                    'https://www.meta.ai/share/m/nBE4tWag2a'
+                ],
+                'soldier fight': [
+                    'https://www.meta.ai/share/m/lvrQpV0BqA',
+                    'https://www.meta.ai/share/m/VWBaC5k8Fo'
+                ],
+                'fight': [
+                    'https://www.meta.ai/share/m/GjblewrHnY',
+                    'https://www.meta.ai/share/m/ZFmfGDxidJ',
+                    'https://www.meta.ai/share/m/SapPQKSJnl'
+                ],
+                'beautiful place': [
+                    'https://www.meta.ai/share/m/J9JEf7cFqa',
+                    'https://www.meta.ai/share/m/UBP1rruWQE',
+                    'https://www.meta.ai/share/m/2R8339BJkh',
+                    'https://www.meta.ai/share/m/mJSpQ8QurU',
+                    'https://www.meta.ai/share/m/rF0Ywh0zPV'
+                ],
+                'horse riders': [
+                    'https://www.meta.ai/share/m/ej3UbS1pgY',
+                    'https://www.meta.ai/share/m/nyZe7WqHh4',
+                    'https://www.meta.ai/share/m/xWy4N6Lu1A',
+                    'https://www.meta.ai/share/m/OtYe8BBzDE',
+                    'https://www.meta.ai/share/m/oF1kLsglZU'
+                ],
+                'race': [
+                    'https://www.meta.ai/share/m/Y7AVe1Fcdq',
+                    'https://www.meta.ai/share/m/TV53jAuaMfH'
+                ],
+                'king': [
+                    'https://www.meta.ai/share/m/qTvtFN8RNb',
+                    'https://www.meta.ai/share/m/IqWwmo7dnt'
+                ],
+                'castle': [
+                    'https://www.meta.ai/share/m/IqWwmo7dnt',
+                    'https://www.meta.ai/share/m/DT2T3Eurjn'
+                ],
+                'horse rider in forest': [
+                    'https://www.meta.ai/share/m/2fsYKJjg3o',
+                    'https://www.meta.ai/share/m/tzXYEUCRFI',
+                    'https://www.meta.ai/share/m/zK59TNwZId'
+                ],
+                'forest': [
+                    'https://www.meta.ai/share/m/2fsYKJjg3o',
+                    'https://www.meta.ai/share/m/tzXYEUCRFI',
+                    'https://www.meta.ai/share/m/zK59TNwZId'
+                ],
+                'children': [
+                    'https://www.meta.ai/share/m/7nM7VIeRRV',
+                    'https://www.meta.ai/share/m/TokzZ5tyGp',
+                    'https://www.meta.ai/share/m/zMZclwVZr1',
+                    'https://www.meta.ai/share/m/XMkyjkUR84'
+                ],
+                'desert': [
+                    'https://www.meta.ai/share/m/OOsEJl0b95',
+                    'https://www.meta.ai/share/m/F2iQAhzJnc',
+                    'https://www.meta.ai/share/m/eaxLvBxKLP',
+                    'https://www.meta.ai/share/m/mn2a7gLfDU'
+                ],
+                'road': [
+                    'https://www.meta.ai/share/m/pZ6cACMtO4',
+                    'https://www.meta.ai/share/m/9jZyLrCp5A',
+                    'https://www.meta.ai/share/m/0p9Zhc7yDK'
+                ],
+                'poor': [
+                    'https://www.meta.ai/share/m/8IxrGIwmRj',
+                    'https://www.meta.ai/share/m/Lg4Xi6Z5N1'
+                ],
+                'rich': [
+                    'https://www.meta.ai/share/m/AxHWkjfcWw',
+                    'https://www.meta.ai/share/m/jKuOsWb3x9'
+                ],
+                'hotel': ['https://www.meta.ai/share/m/vKMCmrAChp'],
+                'restaurant': ['https://www.meta.ai/share/m/vKMCmrAChp'],
+                'police': [
+                    'https://www.meta.ai/share/m/CmG7HIu1g9',
+                    'https://www.meta.ai/share/m/lzizxuZMeo',
+                    'https://www.meta.ai/share/m/6S04yMceLd',
+                    'https://www.meta.ai/share/m/nBE4tWag2a'
+                ],
+                'youtube short': [
+                    'https://share.gemini.google/YQanPD1gpSCJ',
+                    'https://share.gemini.google/StNChONyAjg6',
+                    'https://share.gemini.google/8sxfqxFPALZy'
+                ],
+                'youtube video': [
+                    'https://gemini.google.com/share/d8e71d2bf578?skid=7ac6760d-8cae-4c78-855a-6a0b350158df',
+                    'https://share.gemini.google/XSSTDSgLWCcK'
+                ]
+            };
 
-<script>
-    function startVoice() {
-        const status = document.getElementById('voice-status');
-        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        
-        if (!SpeechRecognition) {
-            status.innerText = "Speech Recognition not supported.";
-            return;
-        }
+            const KEYWORD_ALIASES = {
+                'horse': ['horse and human', 'horse battle', 'horse riders', 'horse rider in forest'],
+                'hourse': ['horse and human', 'horse battle', 'horse riders', 'horse rider in forest'],
+                'human': ['horse and human'],
+                'girl': ['girl'],
+                'woman': ['girl'],
+                'old man': ['old man'],
+                'old': ['old man'],
+                'man': ['old man'],
+                'battle': ['battle', 'horse battle', 'soldier fight', 'fight'],
+                'war': ['battle', 'soldier fight', 'fight', 'army'],
+                'army': ['army', 'soldier fight'],
+                'soldier': ['soldier fight', 'army'],
+                'fight': ['fight', 'soldier fight', 'battle'],
+                'beautiful': ['beautiful place'],
+                'place': ['beautiful place'],
+                'nature': ['beautiful place', 'forest', 'desert'],
+                'rider': ['horse riders', 'horse rider in forest'],
+                'riders': ['horse riders', 'horse rider in forest'],
+                'race': ['race'],
+                'king': ['king', 'castle'],
+                'castle': ['castle', 'king'],
+                'forest': ['forest', 'horse rider in forest'],
+                'jungle': ['forest'],
+                'children': ['children'],
+                'kids': ['children'],
+                'desert': ['desert'],
+                'road': ['road'],
+                'highway': ['road'],
+                'poor': ['poor'],
+                'rich': ['rich'],
+                'wealthy': ['rich'],
+                'hotel': ['hotel', 'restaurant'],
+                'restaurant': ['restaurant', 'hotel'],
+                'resturant': ['restaurant', 'hotel'],
+                'police': ['police', 'army'],
+                'youtube': ['youtube short', 'youtube video'],
+                'short': ['youtube short'],
+            };
 
-        const recognition = new SpeechRecognition();
-        recognition.lang = 'en-US';
-        recognition.onstart = () => { status.innerText = "Listening..."; };
-        recognition.onresult = (event) => {
-            const transcript = event.results[0][0].transcript;
-            status.innerText = "Input: " + transcript;
-        };
-        recognition.onerror = () => { status.innerText = "Error - Please try again"; };
-        recognition.start();
-    }
-</script>
+            const MUSIC_DATA = {
+                'english': {
+                    'sad': 'https://share.gemini.google/vrzHOYScsATb',
+                    'happy': 'https://share.gemini.google/rRMtZComrLFC',
+                    'funny': 'https://share.gemini.google/3kSU1sqmTK2u',
+                    'default': 'https://share.gemini.google/rRMtZComrLFC'
+                },
+                'urdu': {
+                    'sad': 'https://share.gemini.google/3OSEMGyL8De4',
+                    'happy': 'https://share.gemini.google/NWmstTjVom2k',
+                    'funny': 'https://share.gemini.google/mFP6za5e7XGt',
+                    'default': 'https://share.gemini.google/NWmstTjVom2k'
+                }
+            };
 
-<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"e3c1c9af36de41759418005494a48906","r":1,"server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
-<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"e3c1c9af36de41759418005494a48906","r":1}' crossorigin="anonymous"></script>
+            const ELSE_MUSIC_LINKS = [
+                'https://share.gemini.google/EO0IslZOc11i',
+                'https://share.gemini.google/xEx6KhaNZjnp',
+                'https://share.gemini.google/b5eJEf30z2D3',
+                'https://share.gemini.google/gKPyKAH8odPH',
+                'https://share.gemini.google/iKo1z0WxmGCt',
+                'https://share.gemini.google/4KTOkTygQxxL',
+                'https://share.gemini.google/oAREwuQaVq1v',
+                'https://share.gemini.google/bKAz9o66h1mZ',
+                'https://share.gemini.google/knSi0DPxXjFZ',
+                'https://share.gemini.google/BhLAaGMvqgEq',
+                'https://share.gemini.google/RF6mAuYWPeX7',
+                'https://share.gemini.google/JVUlIpd25A0M',
+                'https://share.gemini.google/pyTB8aaiL4qc'
+            ];
+
+            const LARGE_VIDEOS = [
+                'https://app.heygen.com/embeds/4ae7035ab7c24a91b31c27bd98f63503',
+                'https://app.heygen.com/embeds/7b2a1522d63248beaf7f302569c1cc7d',
+                'https://app.heygen.com/embeds/a37776e3d64d4e6f86daa3038669aac7',
+                'https://app.heygen.com/embeds/a19bd7cbd3874ae2bad957b903e9dcbd',
+                'https://app.heygen.com/embeds/01e9320981b541048033c0251187bf23'
+            ];
+
+            const ALL_VIDEO_LINKS = [];
+            for (const key in VIDEO_DATA) {
+                ALL_VIDEO_LINKS.push(...VIDEO_DATA[key]);
+            }
+            const uniqueVideoLinks = [...new Set(ALL_VIDEO_LINKS)];
+            const ALL_FALLBACK_LINKS = [...uniqueVideoLinks, ...ELSE_MUSIC_LINKS];
+
+            // ==================== EXTERNAL OPEN FUNCTION ====================
+            function openInExternalBrowser(url) {
+                // Try Cordova / PhoneGap first
+                if (window.cordova && window.cordova.InAppBrowser) {
+                    window.cordova.InAppBrowser.open(url, '_system');
+                    return;
+                }
+                // Try Android intent for Chrome (forces external browser on Android WebView)
+                if (/Android/i.test(navigator.userAgent)) {
+                    const intentUrl = 'intent://' + url.replace(/^https?:\/\//, '') + '#Intent;scheme=https;package=com.android.chrome;end;';
+                    // Try to open via intent
+                    window.location.href = intentUrl;
+                    // Fallback after a short delay if intent fails
+                    setTimeout(() => {
+                        window.open(url, '_blank');
+                    }, 500);
+                    return;
+                }
+                // Default for desktop / other platforms
+                window.open(url, '_blank');
+            }
+
+            // Attach the function globally for link handlers
+            window.openExternal = openInExternalBrowser;
+
+            // ==================== DOM ELEMENTS ====================
+            const chatArea = document.getElementById('chatArea');
+            const userInput = document.getElementById('userInput');
+            const btnSend = document.getElementById('btnSend');
+            const quickTags = document.getElementById('quickTags');
+            const starsContainer = document.getElementById('starsContainer');
+
+            // ==================== STARS ====================
+            function createStars() {
+                const count = 100;
+                let html = '';
+                for (let i = 0; i < count; i++) {
+                    const size = Math.random() * 2.5 + 0.8;
+                    const x = Math.random() * 100;
+                    const y = Math.random() * 100;
+                    const dur = Math.random() * 3 + 2;
+                    const delay = Math.random() * 5;
+                    html += `<div class="star" style="width:${size}px;height:${size}px;left:${x}%;top:${y}%;--dur:${dur}s;--delay:${delay}s;"></div>`;
+                }
+                starsContainer.innerHTML = html;
+            }
+            createStars();
+
+            // ==================== HELPERS ====================
+            function normalizeText(text) {
+                return text.toLowerCase().trim()
+                    .replace(/hourse/gi, 'horse')
+                    .replace(/housre/gi, 'horse')
+                    .replace(/ridder/gi, 'rider')
+                    .replace(/ridders/gi, 'riders')
+                    .replace(/beautifull/gi, 'beautiful')
+                    .replace(/resturant/gi, 'restaurant')
+                    .replace(/vedio/gi, 'video')
+                    .replace(/vedios/gi, 'video')
+                    .replace(/\s+/g, ' ')
+                    .trim();
+            }
+
+            function getRandomItem(arr) {
+                return arr[Math.floor(Math.random() * arr.length)];
+            }
+
+            function findVideoMatches(keyword) {
+                const normalized = normalizeText(keyword);
+                const words = normalized.split(' ');
+                let allMatchedCategories = new Set();
+
+                for (const word of words) {
+                    if (KEYWORD_ALIASES[word]) {
+                        KEYWORD_ALIASES[word].forEach(cat => allMatchedCategories.add(cat));
+                    }
+                }
+
+                for (const category in VIDEO_DATA) {
+                    const catNormalized = normalizeText(category);
+                    if (normalized.includes(catNormalized) || catNormalized.includes(normalized)) {
+                        allMatchedCategories.add(category);
+                    }
+                    const catWords = catNormalized.split(' ');
+                    for (const catWord of catWords) {
+                        if (catWord.length > 2 && normalized.includes(catWord)) {
+                            allMatchedCategories.add(category);
+                        }
+                    }
+                }
+
+                let allLinks = [];
+                for (const cat of allMatchedCategories) {
+                    if (VIDEO_DATA[cat]) {
+                        allLinks.push(...VIDEO_DATA[cat]);
+                    }
+                }
+                return [...new Set(allLinks)];
+            }
+
+            function detectMusicIntent(text) {
+                const normalized = normalizeText(text);
+                const musicWords = ['song', 'music', 'audio', 'songs', 'musics', 'gaana', 'gana', 'naghma', 'dhun', 'sad', 'happy', 'funny', 'emotional'];
+                const hasMusicIntent = musicWords.some(w => normalized.includes(w));
+                if (!hasMusicIntent) return null;
+
+                const urduWords = ['urdu', 'pakistani', 'hindi', 'desi', 'punjabi'];
+                const englishWords = ['english', 'american', 'hollywood', 'pop', 'rock'];
+
+                let language = null;
+                for (const w of urduWords) {
+                    if (normalized.includes(w)) { language = 'urdu'; break; }
+                }
+                if (!language) {
+                    for (const w of englishWords) {
+                        if (normalized.includes(w)) { language = 'english'; break; }
+                    }
+                }
+                if (!language) language = 'english';
+
+                let mood = 'default';
+                if (normalized.includes('sad') || normalized.includes('dard') || normalized.includes('gham') || normalized.includes('emotional') || normalized.includes('cry')) {
+                    mood = 'sad';
+                } else if (normalized.includes('happy') || normalized.includes('khushi') || normalized.includes('joy') || normalized.includes('celebration')) {
+                    mood = 'happy';
+                } else if (normalized.includes('funny') || normalized.includes('comedy') || normalized.includes('mazaq') || normalized.includes('laugh')) {
+                    mood = 'funny';
+                }
+                return { language, mood };
+            }
+
+            function isLargeVideoRequest(text) {
+                const normalized = normalizeText(text);
+                return normalized.includes('large video') || normalized.includes('big video') || normalized.includes('bada video') || normalized.includes('badi video') || normalized.includes('full video') || normalized.includes('embed video');
+            }
+
+            function isYoutubeRequest(text) {
+                const normalized = normalizeText(text);
+                return normalized.includes('youtube') || normalized.includes('yt');
+            }
+
+            // ==================== RENDER ====================
+            function addMessage(type, content, isHtml = false) {
+                const div = document.createElement('div');
+                div.className = `message ${type}`;
+                const avatar = type === 'ai' ? '🌙' : '👤';
+                div.innerHTML = `
+                    <div class="message-avatar">${avatar}</div>
+                    <div class="message-bubble">${isHtml ? content : escapeHtml(content)}</div>
+                `;
+                chatArea.appendChild(div);
+                chatArea.scrollTop = chatArea.scrollHeight;
+                return div;
+            }
+
+            function escapeHtml(text) {
+                const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
+                return text.replace(/[&<>"']/g, m => map[m]);
+            }
+
+            function renderLinkCard(link, label = '🎬 Open Video', badgeType = 'video') {
+                const badgeClass = badgeType === 'music' ? 'badge-music' : badgeType === 'large' ? 'badge-large' : 'badge-video';
+                const badgeText = badgeType === 'music' ? 'MUSIC' : badgeType === 'large' ? 'LARGE VIDEO' : 'VIDEO';
+                // Use onclick to call external opener, also keep href for fallback
+                return `
+                    <a href="${link}" class="link-card external-link" onclick="event.preventDefault(); window.openExternal('${link}');">
+                        <span class="link-icon">${badgeType === 'music' ? '🎵' : badgeType === 'large' ? '🎬' : '▶️'}</span>
+                        <strong>${label}</strong>
+                        <span class="badge ${badgeClass}">${badgeText}</span>
+                        <br><small style="color:#8a8ab0;">Click to open → ${truncateUrl(link)}</small>
+                    </a>
+                `;
+            }
+
+            function truncateUrl(url, maxLen = 45) {
+                if (url.length <= maxLen) return url;
+                return url.substring(0, maxLen) + '...';
+            }
+
+            function renderIframe(iframeUrl) {
+                return `
+                    <div class="iframe-container">
+                        <iframe src="${iframeUrl}" title="Large AI Video" frameborder="0" allow="encrypted-media; fullscreen;" allowfullscreen></iframe>
+                    </div>
+                    <p style="text-align:center;margin-top:6px;font-size:0.8rem;color:#b0b0c8;">
+                        🎬 <em>Large video playing above</em> | 
+                        <a href="${iframeUrl}" class="external-link" onclick="event.preventDefault(); window.openExternal('${iframeUrl}');" style="color:#7ecbff;">Open in new tab ↗</a>
+                    </p>
+                `;
+            }
+
+            // ==================== MAIN LOGIC ====================
+            function processInput(userText) {
+                const text = userText.trim();
+                if (!text) return;
+
+                addMessage('user', text);
+                const normalized = normalizeText(text);
+
+                if (isLargeVideoRequest(text)) {
+                    const randomLargeVideo = getRandomItem(LARGE_VIDEOS);
+                    const htmlContent = `
+                        <strong>🎬 Large Video Found!</strong><br>
+                        Here's a randomly selected large video for you:
+                        ${renderIframe(randomLargeVideo)}
+                    `;
+                    addMessage('ai', htmlContent, true);
+                    return;
+                }
+
+                const musicIntent = detectMusicIntent(text);
+                if (musicIntent) {
+                    const { language, mood } = musicIntent;
+                    const musicLink = MUSIC_DATA[language]?.[mood] || MUSIC_DATA[language]?.default || getRandomItem(ELSE_MUSIC_LINKS);
+                    const moodEmoji = mood === 'sad' ? '💔' : mood === 'happy' ? '😊' : mood === 'funny' ? '😂' : '🎵';
+                    const htmlContent = `
+                        <strong>${moodEmoji} ${language.toUpperCase()} ${mood.toUpperCase()} Song Found!</strong><br>
+                        ${renderLinkCard(musicLink, `🎵 Open ${language} ${mood} Song`, 'music')}
+                    `;
+                    addMessage('ai', htmlContent, true);
+                    return;
+                }
+
+                if (isYoutubeRequest(text)) {
+                    const ytLinks = [...(VIDEO_DATA['youtube short'] || []), ...(VIDEO_DATA['youtube video'] || [])];
+                    if (ytLinks.length > 0) {
+                        const randomYt = getRandomItem(ytLinks);
+                        const htmlContent = `
+                            <strong>📺 YouTube Content Found!</strong><br>
+                            ${renderLinkCard(randomYt, '🎬 Open YouTube Link', 'video')}
+                        `;
+                        addMessage('ai', htmlContent, true);
+                        return;
+                    }
+                }
+
+                const matchedLinks = findVideoMatches(text);
+                if (matchedLinks.length > 0) {
+                    const randomLink = getRandomItem(matchedLinks);
+                    const htmlContent = `
+                        <strong>✅ Match Found!</strong> (${matchedLinks.length} video(s) in category)<br>
+                        ${renderLinkCard(randomLink, '🎬 Open Random Video', 'video')}
+                    `;
+                    addMessage('ai', htmlContent, true);
+                } else {
+                    const randomFallback = getRandomItem(ALL_FALLBACK_LINKS);
+                    const isMusicLink = ELSE_MUSIC_LINKS.includes(randomFallback);
+                    const badgeType = isMusicLink ? 'music' : 'video';
+                    const label = isMusicLink ? '🎵 Open Random Song' : '🎬 Open Random Video';
+                    const htmlContent = `
+                        <strong>🔍 No specific match found for "${escapeHtml(text)}"</strong><br>
+                        Here's a random pick from our collection instead:
+                        ${renderLinkCard(randomFallback, label, badgeType)}
+                    `;
+                    addMessage('ai', htmlContent, true);
+                }
+            }
+
+            // ==================== EVENT LISTENERS ====================
+            btnSend.addEventListener('click', () => {
+                const text = userInput.value.trim();
+                if (text) {
+                    processInput(text);
+                    userInput.value = '';
+                    userInput.focus();
+                }
+            });
+
+            userInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    const text = userInput.value.trim();
+                    if (text) {
+                        processInput(text);
+                        userInput.value = '';
+                    }
+                }
+            });
+
+            quickTags.addEventListener('click', (e) => {
+                const tag = e.target.closest('.quick-tag');
+                if (!tag) return;
+                const keyword = tag.dataset.keyword;
+                if (keyword) {
+                    userInput.value = keyword;
+                    processInput(keyword);
+                    userInput.value = '';
+                    userInput.focus();
+                }
+            });
+
+            // Also handle credit link and any future external-link class
+            document.addEventListener('click', function(e) {
+                const link = e.target.closest('.external-link');
+                if (link && link.href) {
+                    e.preventDefault();
+                    openInExternalBrowser(link.href);
+                }
+            });
+
+            setTimeout(() => userInput.focus(), 500);
+
+            console.log('%c🌙 LYRA MOON AI %cReady %c✨', 'font-size:1.4em;color:#f0d78c;', 'font-size:1em;color:#c9a0ff;', 'font-size:1.2em;');
+            console.log('%cCreated by MUHAMMAD TAQI %c| %chttps://nexura.oneapp.dev/', 'color:#f0d78c;font-weight:bold;', 'color:#aaa;', 'color:#7ecbff;');
+        })();
+    </script>
 </body>
 </html>
