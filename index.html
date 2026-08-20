@@ -12,7 +12,6 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Helvetica, Arial, sans-serif; }
         body { background: #f0f2f5; color: #111b21; height: 100vh; display: flex; justify-content: center; align-items: center; }
 
-        /* Clickable Icon Pointer */
         .clickable-icon { cursor: pointer; transition: transform 0.2s; }
         .clickable-icon:hover { transform: scale(1.05); }
 
@@ -66,10 +65,13 @@
         .msg-bubble { max-width: 65%; padding: 8px 12px; border-radius: 8px; font-size: 14px; line-height: 19px; position: relative; word-wrap: break-word; box-shadow: 0 1px 0.5px rgba(11,20,26,0.13); }
         .msg-bubble.me { background: #d9fdd3; align-self: flex-end; border-top-right-radius: 0; }
         .msg-bubble.them { background: #ffffff; align-self: flex-start; border-top-left-radius: 0; }
+        .msg-bubble img, .msg-bubble video { max-width: 100%; max-height: 250px; border-radius: 8px; margin-bottom: 4px; display: block; }
         .msg-time { font-size: 10px; color: #667781; text-align: right; margin-top: 2px; }
 
-        .chat-footer { height: 62px; background: #f0f2f5; padding: 10px 16px; display: flex; align-items: center; gap: 12px; }
+        .chat-footer { height: 62px; background: #f0f2f5; padding: 10px 16px; display: flex; align-items: center; gap: 10px; }
         .message-input { flex: 1; padding: 11px 16px; border: none; border-radius: 8px; font-size: 14px; outline: none; background: #ffffff; }
+        .media-btn { color: #54656f; font-size: 20px; cursor: pointer; padding: 5px; }
+        .media-btn:hover { color: #00a884; }
         .send-btn { background: #00a884; color: white; border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; display: flex; justify-content: center; align-items: center; }
 
         .empty-chat { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; background: #f0f2f5; color: #667781; text-align: center; }
@@ -156,6 +158,11 @@
                 <div class="chat-messages" id="chatMessages"></div>
 
                 <div class="chat-footer">
+                    <label for="fileInput" class="media-btn" title="Send Image or Video">
+                        <i class="fa-solid fa-paperclip"></i>
+                    </label>
+                    <input type="file" id="fileInput" accept="image/*,video/*" style="display: none;" onchange="handleFileSelect(event)">
+                    
                     <input type="text" id="messageInput" class="message-input" placeholder="Type a message..." onkeypress="handleKeyPress(event)">
                     <button class="send-btn" onclick="sendMessage()"><i class="fa-solid fa-paper-plane"></i></button>
                 </div>
@@ -229,7 +236,7 @@
 
                 conn.on('data', (data) => {
                     if (data.type === 'chat') {
-                        saveMessage(data.fromId, data.fromName, data.text, 'them');
+                        saveMessage(data.fromId, data.fromName, data.text, 'them', data.msgType, data.mediaUrl);
                         
                         if (!contacts.some(c => c.id === data.fromId)) {
                             contacts.push({ name: data.fromName, id: data.fromId });
@@ -274,7 +281,13 @@
 
             contacts.forEach(c => {
                 const userMsgs = messagesDB[c.id] || [];
-                const lastMsg = userMsgs.length > 0 ? userMsgs[userMsgs.length - 1].text : 'Click to chat';
+                let lastMsg = 'Click to chat';
+                if (userMsgs.length > 0) {
+                    const last = userMsgs[userMsgs.length - 1];
+                    if (last.msgType === 'image') lastMsg = '📷 Photo';
+                    else if (last.msgType === 'video') lastMsg = '🎥 Video';
+                    else lastMsg = last.text;
+                }
 
                 const item = document.createElement('div');
                 item.className = `contact-item ${activeFriendId === c.id ? 'active' : ''}`;
@@ -310,7 +323,7 @@
 
                 conn.on('data', (data) => {
                     if (data.type === 'chat') {
-                        saveMessage(data.fromId, data.fromName, data.text, 'them');
+                        saveMessage(data.fromId, data.fromName, data.text, 'them', data.msgType, data.mediaUrl);
                         if (activeFriendId === data.fromId) renderMessages();
                     }
                 });
@@ -320,44 +333,57 @@
             renderMessages();
         }
 
-        function sendMessage() {
+        function sendMessage(msgType = 'text', mediaUrl = null) {
             const input = document.getElementById('messageInput');
-            const text = input.value.trim();
-            if (!text || !activeFriendId) return;
+            const text = msgType === 'text' ? input.value.trim() : '';
+            if ((!text && !mediaUrl) || !activeFriendId) return;
+
+            const payload = {
+                type: 'chat',
+                fromName: currentUser.name,
+                fromId: currentUser.id,
+                text: text,
+                msgType: msgType,
+                mediaUrl: mediaUrl
+            };
 
             const conn = connections[activeFriendId];
 
             if (conn && conn.open) {
-                conn.send({
-                    type: 'chat',
-                    fromName: currentUser.name,
-                    fromId: currentUser.id,
-                    text: text
-                });
+                conn.send(payload);
             } else {
                 const newConn = peer.connect('vibe-' + activeFriendId, { reliable: true });
                 connections[activeFriendId] = newConn;
                 newConn.on('open', () => {
-                    newConn.send({
-                        type: 'chat',
-                        fromName: currentUser.name,
-                        fromId: currentUser.id,
-                        text: text
-                    });
+                    newConn.send(payload);
                 });
             }
 
-            saveMessage(activeFriendId, currentUser.name, text, 'me');
-            input.value = '';
+            saveMessage(activeFriendId, currentUser.name, text, 'me', msgType, mediaUrl);
+            if (msgType === 'text') input.value = '';
             renderMessages();
             renderContacts();
         }
 
-        function saveMessage(friendId, senderName, text, type) {
+        function handleFileSelect(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const base64Data = event.target.result;
+                const isVideo = file.type.startsWith('video');
+                sendMessage(isVideo ? 'video' : 'image', base64Data);
+            };
+            reader.readAsDataURL(file);
+            e.target.value = '';
+        }
+
+        function saveMessage(friendId, senderName, text, type, msgType = 'text', mediaUrl = null) {
             if (!messagesDB[friendId]) messagesDB[friendId] = [];
 
             const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            messagesDB[friendId].push({ text, type, time });
+            messagesDB[friendId].push({ text, type, time, msgType, mediaUrl });
 
             localStorage.setItem('vibe_messages', JSON.stringify(messagesDB));
         }
@@ -371,10 +397,18 @@
             list.forEach(msg => {
                 const div = document.createElement('div');
                 div.className = `msg-bubble ${msg.type}`;
-                div.innerHTML = `
-                    ${msg.text}
-                    <div class="msg-time">${msg.time}</div>
-                `;
+                
+                let contentHTML = '';
+                if (msg.msgType === 'image') {
+                    contentHTML += `<img src="${msg.mediaUrl}" alt="Sent Image">`;
+                } else if (msg.msgType === 'video') {
+                    contentHTML += `<video src="${msg.mediaUrl}" controls></video>`;
+                }
+
+                if (msg.text) contentHTML += `<div>${msg.text}</div>`;
+                contentHTML += `<div class="msg-time">${msg.time}</div>`;
+
+                div.innerHTML = contentHTML;
                 container.appendChild(div);
             });
 
