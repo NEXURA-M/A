@@ -3,462 +3,463 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VIBE - Created by Muhammad Taqi</title>
-    <!-- Favicon Icon -->
-    <link rel="icon" type="image/png" href="icon.png">
-    <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <title>LyraMoon AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Helvetica, Arial, sans-serif; }
-        body { background: #f0f2f5; color: #111b21; height: 100vh; display: flex; justify-content: center; align-items: center; }
+        :root {
+            --bg-color: #030014;
+            --card-bg: rgba(15, 10, 30, 0.55);
+            --border-glow: rgba(236, 72, 153, 0.35);
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --pink-accent: #ec4899;
+            --purple-accent: #a855f7;
+            --cyan-accent: #06b6d4;
+        }
 
-        .clickable-icon { cursor: pointer; transition: transform 0.2s; }
-        .clickable-icon:hover { transform: scale(1.05); }
+        * {
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
 
-        /* Auth Screen */
-        .auth-container { width: 100%; max-width: 400px; background: #ffffff; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); text-align: center; }
-        .app-logo { width: 70px; height: 70px; border-radius: 50%; object-fit: cover; margin-bottom: 12px; }
-        .auth-container h1 { color: #00a884; font-size: 28px; font-weight: 700; letter-spacing: 1px; }
-        .auth-container .subtitle { font-size: 13px; color: #667781; margin-bottom: 25px; font-weight: 600; }
-        .auth-input { width: 100%; padding: 12px 14px; margin-bottom: 15px; border: 1px solid #e9edef; border-radius: 8px; font-size: 14px; background: #f8f9fa; outline: none; }
-        .auth-input:focus { border-color: #00a884; background: #fff; }
-        .btn-primary { width: 100%; padding: 12px; background: #00a884; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 15px; }
-        .btn-primary:hover { background: #008f6f; }
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
 
-        /* Main App Layout */
-        .app-layout { width: 100vw; height: 100vh; display: flex; background: #fff; overflow: hidden; position: relative; }
+        /* Ambient Glowing Background Orbs */
+        .ambient-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.5;
+            z-index: 0;
+            animation: orbFloat 12s infinite alternate ease-in-out;
+        }
+        .orb-1 { width: 350px; height: 350px; background: var(--pink-accent); top: -50px; left: -50px; }
+        .orb-2 { width: 400px; height: 400px; background: var(--purple-accent); bottom: -100px; right: -50px; animation-delay: -6s; }
+        .orb-3 { width: 250px; height: 250px; background: var(--cyan-accent); top: 40%; left: 50%; transform: translate(-50%, -50%); opacity: 0.25; }
 
-        /* Sidebar */
-        .sidebar { width: 380px; border-right: 1px solid #e9edef; display: flex; flex-direction: column; background: #ffffff; flex-shrink: 0; }
-        .sidebar-header { height: 60px; background: #f0f2f5; padding: 10px 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e9edef; }
-        .user-brand { display: flex; align-items: center; gap: 10px; }
-        .header-logo { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; }
-        .profile-info { display: flex; flex-direction: column; }
-        .profile-name { font-weight: 700; font-size: 15px; color: #111b21; }
-        .profile-id { font-size: 11px; color: #667781; }
-        .header-actions { display: flex; gap: 18px; color: #54656f; font-size: 18px; cursor: pointer; }
-        .header-actions i:hover { color: #00a884; }
+        @keyframes orbFloat {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(30px, 50px) scale(1.15); }
+        }
 
-        .search-box { padding: 8px 12px; background: #ffffff; border-bottom: 1px solid #e9edef; }
-        .search-input { width: 100%; padding: 8px 12px 8px 35px; border-radius: 8px; border: none; background: #f0f2f5; font-size: 13px; outline: none; }
-        .search-wrapper { position: relative; }
-        .search-wrapper i { position: absolute; left: 12px; top: 10px; color: #54656f; font-size: 12px; }
+        /* Futuristic Glass Container */
+        .chat-container {
+            width: 100%;
+            max-width: 750px;
+            height: 88vh;
+            background: var(--card-bg);
+            backdrop-filter: blur(25px) saturate(180%);
+            -webkit-backdrop-filter: blur(25px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 28px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8),
+                        0 0 40px rgba(168, 85, 247, 0.15);
+            z-index: 1;
+            position: relative;
+        }
 
-        .contacts-list { flex: 1; overflow-y: auto; }
-        .contact-item { display: flex; align-items: center; padding: 12px 16px; cursor: pointer; border-bottom: 1px solid #f5f6f6; transition: background 0.2s; }
-        .contact-item:hover, .contact-item.active { background: #f0f2f5; }
-        .avatar { width: 42px; height: 42px; border-radius: 50%; background: #00a884; color: white; display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 16px; margin-right: 12px; flex-shrink: 0; overflow: hidden; }
-        .contact-details { flex: 1; overflow: hidden; }
-        .contact-title { display: flex; justify-content: space-between; font-size: 14px; font-weight: 600; color: #111b21; }
-        .last-msg { font-size: 12px; color: #667781; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 2px; }
+        /* Animated Glowing Border Overlay */
+        .chat-container::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 28px;
+            padding: 1.5px;
+            background: linear-gradient(135deg, var(--pink-accent), transparent, var(--purple-accent), var(--cyan-accent));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
 
-        /* Right Chat Panel */
-        .main-chat { flex: 1; display: flex; flex-direction: column; background: #efeae2; position: relative; width: 100%; }
-        .chat-header { height: 60px; background: #f0f2f5; padding: 10px 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e9edef; }
-        .chat-header-user { display: flex; align-items: center; gap: 12px; }
-        .back-btn { font-size: 18px; color: #54656f; cursor: pointer; padding: 5px; }
-        .back-btn:hover { color: #00a884; }
-        .chat-header-actions { display: flex; gap: 10px; }
-        .chat-action-btn { background: #ea4335; color: white; border: none; padding: 7px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px; }
-        .chat-action-btn.secondary { background: #54656f; }
-        .chat-action-btn:hover { opacity: 0.9; }
+        /* Header Styling */
+        .chat-header {
+            padding: 22px 30px;
+            background: rgba(10, 5, 20, 0.6);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
 
-        .chat-messages { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
-        .msg-bubble { max-width: 65%; padding: 8px 12px; border-radius: 8px; font-size: 14px; line-height: 19px; position: relative; word-wrap: break-word; box-shadow: 0 1px 0.5px rgba(11,20,26,0.13); }
-        .msg-bubble.me { background: #d9fdd3; align-self: flex-end; border-top-right-radius: 0; }
-        .msg-bubble.them { background: #ffffff; align-self: flex-start; border-top-left-radius: 0; }
-        .msg-bubble img, .msg-bubble video { max-width: 100%; max-height: 250px; border-radius: 8px; margin-bottom: 4px; display: block; }
-        .msg-time { font-size: 10px; color: #667781; text-align: right; margin-top: 2px; }
+        .header-info h2 {
+            font-size: 1.6rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ffffff 0%, #f472b6 50%, #c084fc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
 
-        .chat-footer { height: 62px; background: #f0f2f5; padding: 10px 16px; display: flex; align-items: center; gap: 10px; }
-        .message-input { flex: 1; padding: 11px 16px; border: none; border-radius: 8px; font-size: 14px; outline: none; background: #ffffff; }
-        .media-btn { color: #54656f; font-size: 20px; cursor: pointer; padding: 5px; }
-        .media-btn:hover { color: #00a884; }
-        .send-btn { background: #00a884; color: white; border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; display: flex; justify-content: center; align-items: center; }
+        .header-info p {
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+            margin-top: 2px;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+        }
 
-        .empty-chat { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; background: #f0f2f5; color: #667781; text-align: center; }
-        .empty-chat img { width: 100px; height: 100px; margin-bottom: 15px; border-radius: 50%; }
+        .header-info p span {
+            color: var(--pink-accent);
+            font-weight: 600;
+        }
 
-        /* Full Screen Toggle Classes */
-        .app-layout.full-chat .sidebar { display: none; }
-        .app-layout.full-chat .main-chat { display: flex; width: 100%; }
+        /* Pulse Indicator */
+        .status-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(236, 72, 153, 0.1);
+            border: 1px solid rgba(236, 72, 153, 0.3);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            color: #f472b6;
+            font-weight: 600;
+        }
 
-        /* Modal */
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(11,20,26,0.4); justify-content: center; align-items: center; z-index: 1000; }
-        .modal-content { background: #ffffff; width: 360px; padding: 24px; border-radius: 12px; box-shadow: 0 4px 24px rgba(0,0,0,0.15); }
-        .modal-header { font-size: 18px; font-weight: 600; color: #111b21; margin-bottom: 15px; }
+        .pulse-dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--pink-accent);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--pink-accent);
+            animation: pulse 1.8s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(236, 72, 153, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(236, 72, 153, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(236, 72, 153, 0); }
+        }
+
+        /* Chat Area */
+        .chat-box {
+            flex: 1;
+            overflow-y: auto;
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            scroll-behavior: smooth;
+        }
+
+        .chat-box::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .chat-box::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
+        }
+
+        /* Animated Chat Bubbles */
+        .message-wrapper {
+            display: flex;
+            gap: 12px;
+            align-items: flex-end;
+            max-width: 82%;
+            animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px) scale(0.96); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .user-wrapper {
+            align-self: flex-end;
+            flex-direction: row-reverse;
+        }
+
+        .bot-wrapper {
+            align-self: flex-start;
+        }
+
+        .avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+        }
+
+        .bot-avatar {
+            background: linear-gradient(135deg, var(--pink-accent), var(--purple-accent));
+            color: #fff;
+            box-shadow: 0 4px 15px rgba(236, 72, 153, 0.4);
+        }
+
+        .user-avatar {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .message {
+            padding: 15px 20px;
+            border-radius: 20px;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            word-wrap: break-word;
+            position: relative;
+        }
+
+        .user {
+            background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
+            color: #ffffff;
+            border-bottom-right-radius: 4px;
+            box-shadow: 0 8px 20px rgba(236, 72, 153, 0.25);
+        }
+
+        .bot {
+            background: rgba(255, 255, 255, 0.04);
+            color: #e2e8f0;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-bottom-left-radius: 4px;
+            backdrop-filter: blur(10px);
+        }
+
+        /* Typing Dots Indicator Animation */
+        .typing-indicator {
+            display: flex;
+            gap: 5px;
+            align-items: center;
+            padding: 18px 22px;
+        }
+
+        .typing-dot {
+            width: 7px;
+            height: 7px;
+            background-color: var(--pink-accent);
+            border-radius: 50%;
+            animation: bounce 1.4s infinite ease-in-out both;
+        }
+
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+
+        @keyframes bounce {
+            0%, 80%, 100% { transform: scale(0); opacity: 0.3; }
+            40% { transform: scale(1); opacity: 1; }
+        }
+
+        /* Input Controls Area */
+        .input-box {
+            padding: 20px;
+            background: rgba(10, 5, 20, 0.6);
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .input-wrapper {
+            flex: 1;
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        input {
+            width: 100%;
+            padding: 16px 20px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 16px;
+            color: #fff;
+            font-size: 0.95rem;
+            outline: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        input::placeholder {
+            color: #64748b;
+        }
+
+        input:focus {
+            background: rgba(255, 255, 255, 0.07);
+            border-color: var(--pink-accent);
+            box-shadow: 0 0 20px rgba(236, 72, 153, 0.25);
+        }
+
+        button {
+            width: 52px;
+            height: 52px;
+            background: linear-gradient(135deg, var(--pink-accent), var(--purple-accent));
+            color: #ffffff;
+            border: none;
+            border-radius: 16px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 6px 20px rgba(236, 72, 153, 0.35);
+            flex-shrink: 0;
+        }
+
+        button:hover {
+            transform: translateY(-2px) scale(1.03);
+            box-shadow: 0 10px 25px rgba(236, 72, 153, 0.5);
+        }
+
+        button:active {
+            transform: translateY(0) scale(0.97);
+        }
     </style>
 </head>
 <body>
 
-    <!-- Account Setup Screen -->
-    <div class="auth-container" id="authScreen">
-        <a href="https://taqi.oneapp.dev" target="_blank" title="Visit taqi.oneapp.dev">
-            <img src="icon.png" alt="VIBE Icon" class="app-logo clickable-icon">
-        </a>
-        <h1>VIBE</h1>
-        <p class="subtitle">CREATED BY MUHAMMAD TAQI</p>
-        <input type="text" id="nameInput" class="auth-input" placeholder="Your Name" maxlength="20">
-        <input type="text" id="customIdInput" class="auth-input" placeholder="Enter 12-25 Digit Custom ID" maxlength="25">
-        <button class="btn-primary" onclick="createProfile()">Create & Save Account</button>
-    </div>
+    <!-- Glowing Background Orbs -->
+    <div class="ambient-orb orb-1"></div>
+    <div class="ambient-orb orb-2"></div>
+    <div class="ambient-orb orb-3"></div>
 
-    <!-- Main Messenger Interface -->
-    <div class="app-layout" id="appLayout" style="display: none;">
-        <!-- Left Sidebar -->
-        <div class="sidebar">
-            <div class="sidebar-header">
-                <div class="user-brand">
-                    <a href="https://taqi.oneapp.dev" target="_blank" title="Visit taqi.oneapp.dev">
-                        <img src="icon.png" class="header-logo clickable-icon" alt="VIBE Icon">
-                    </a>
-                    <div class="profile-info">
-                        <span class="profile-name" id="myProfileName">-</span>
-                        <span class="profile-id" id="myProfileId">ID: -</span>
-                    </div>
-                </div>
-                <div class="header-actions">
-                    <i class="fa-solid fa-user-plus" title="Add Contact" onclick="openModal()"></i>
-                </div>
+    <div class="chat-container">
+        <!-- Header -->
+        <div class="chat-header">
+            <div class="header-info">
+                <h2><i class="fa-solid font-awesome fa-moon"></i> LyraMoon AI</h2>
+                <p>Designed & Crafted by <span>Muhammad Taqi</span></p>
             </div>
-            
-            <div class="search-box">
-                <div class="search-wrapper">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                    <input type="text" class="search-input" placeholder="Search or start new chat">
-                </div>
+            <div class="status-badge">
+                <div class="pulse-dot"></div> Voice Active
             </div>
-
-            <div class="contacts-list" id="contactsContainer"></div>
         </div>
 
-        <!-- Right Chat Panel -->
-        <div class="main-chat">
-            <div id="emptyChatView" class="empty-chat">
-                <a href="https://taqi.oneapp.dev" target="_blank" title="Visit taqi.oneapp.dev">
-                    <img src="icon.png" alt="VIBE Icon" class="clickable-icon">
-                </a>
-                <h2>VIBE Web</h2>
-                <p style="margin-top: 8px; font-size: 14px;">Select a contact or click '+' to add a friend using their ID.</p>
-            </div>
-
-            <div id="activeChatView" style="display: none; height: 100%; flex-direction: column;">
-                <div class="chat-header">
-                    <div class="chat-header-user">
-                        <i class="fa-solid fa-arrow-left back-btn" onclick="goBackToContacts()" title="Back to Contacts"></i>
-                        <div class="avatar" id="activeAvatar">?</div>
-                        <div>
-                            <div class="profile-name" id="activeContactName">Friend</div>
-                            <div class="profile-id" id="activeContactId">ID: -</div>
-                        </div>
-                    </div>
-                    <div class="chat-header-actions">
-                        <button class="chat-action-btn secondary" onclick="deleteChat()" title="Delete all messages with this contact">
-                            <i class="fa-solid fa-broom"></i> Clear Chat
-                        </button>
-                        <button class="chat-action-btn" onclick="deleteContact()" title="Delete contact permanently">
-                            <i class="fa-solid fa-trash"></i> Delete Contact
-                        </button>
-                    </div>
-                </div>
-
-                <div class="chat-messages" id="chatMessages"></div>
-
-                <div class="chat-footer">
-                    <label for="fileInput" class="media-btn" title="Send Image or Video">
-                        <i class="fa-solid fa-paperclip"></i>
-                    </label>
-                    <input type="file" id="fileInput" accept="image/*,video/*" style="display: none;" onchange="handleFileSelect(event)">
-                    
-                    <input type="text" id="messageInput" class="message-input" placeholder="Type a message..." onkeypress="handleKeyPress(event)">
-                    <button class="send-btn" onclick="sendMessage()"><i class="fa-solid fa-paper-plane"></i></button>
+        <!-- Chat Scroll Area -->
+        <div class="chat-box" id="chatBox">
+            <div class="message-wrapper bot-wrapper">
+                <div class="avatar bot-avatar"><i class="fa-solid fa-sparkles"></i></div>
+                <div class="message bot">
+                    Greetings! I am <b>LyraMoon</b>. How may I illuminate your thoughts today?
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- Modal for Adding Contact -->
-    <div class="modal" id="addContactModal">
-        <div class="modal-content">
-            <div class="modal-header">Add New Contact</div>
-            <input type="text" id="friendNameInput" class="auth-input" placeholder="Contact Name" maxlength="20">
-            <input type="text" id="friendIdInput" class="auth-input" placeholder="Enter 12-25 Digit ID" maxlength="25">
-            <div style="display: flex; gap: 10px; margin-top: 10px;">
-                <button class="btn-primary" style="background: #e9edef; color: #111b21;" onclick="closeModal()">Cancel</button>
-                <button class="btn-primary" onclick="saveContact()">Add & Save</button>
+        <!-- Input Bar -->
+        <div class="input-box">
+            <div class="input-wrapper">
+                <input type="text" id="userInput" placeholder="Ask LyraMoon anything..." onkeypress="if(event.key==='Enter') sendMessage()">
             </div>
+            <button onclick="sendMessage()" id="sendBtn">
+                <i class="fa-solid fa-paper-plane"></i>
+            </button>
         </div>
     </div>
 
     <script>
-        let currentUser = null;
-        let peer = null;
-        let connections = {};
-        let contacts = [];
-        let messagesDB = {};
-        let activeFriendId = null;
-
-        window.onload = function() {
-            const savedUser = localStorage.getItem('vibe_user');
-            const savedContacts = localStorage.getItem('vibe_contacts');
-            const savedMessages = localStorage.getItem('vibe_messages');
-
-            if (savedContacts) contacts = JSON.parse(savedContacts);
-            if (savedMessages) messagesDB = JSON.parse(savedMessages);
-
-            if (savedUser) {
-                currentUser = JSON.parse(savedUser);
-                initPeer();
-            }
-        };
-
-        function createProfile() {
-            const name = document.getElementById('nameInput').value.trim();
-            const customId = document.getElementById('customIdInput').value.trim();
-
-            if (!name) return alert('Please enter your name');
-            if (!/^[0-9]{12,25}$/.test(customId)) return alert('ID must be between 12 and 25 digits!');
-
-            currentUser = { name, id: customId };
-            localStorage.setItem('vibe_user', JSON.stringify(currentUser));
-            initPeer();
-        }
-
-        function initPeer() {
-            if (peer) peer.destroy();
-
-            peer = new Peer('vibe-' + currentUser.id);
-
-            peer.on('open', () => {
-                document.getElementById('authScreen').style.display = 'none';
-                document.getElementById('appLayout').style.display = 'flex';
-                document.getElementById('myProfileName').innerText = currentUser.name;
-                document.getElementById('myProfileId').innerText = 'ID: ' + currentUser.id;
-                renderContacts();
-            });
-
-            peer.on('connection', (conn) => {
-                const incomingId = conn.peer.replace('vibe-', '');
-                connections[incomingId] = conn;
-
-                conn.on('data', (data) => {
-                    if (data.type === 'chat') {
-                        saveMessage(data.fromId, data.fromName, data.text, 'them', data.msgType, data.mediaUrl);
-                        
-                        if (!contacts.some(c => c.id === data.fromId)) {
-                            contacts.push({ name: data.fromName, id: data.fromId });
-                            localStorage.setItem('vibe_contacts', JSON.stringify(contacts));
-                            renderContacts();
-                        }
-
-                        if (activeFriendId === data.fromId) {
-                            renderMessages();
-                        }
-                    }
-                });
-            });
-
-            peer.on('error', (err) => console.error('PeerJS Error:', err));
-        }
-
-        function openModal() { document.getElementById('addContactModal').style.display = 'flex'; }
-        function closeModal() { document.getElementById('addContactModal').style.display = 'none'; }
-
-        function saveContact() {
-            const friendName = document.getElementById('friendNameInput').value.trim();
-            const friendId = document.getElementById('friendIdInput').value.trim();
-
-            if (!friendName) return alert('Enter contact name');
-            if (!/^[0-9]{12,25}$/.test(friendId)) return alert('Enter a valid 12-25 digit ID');
-            if (friendId === currentUser.id) return alert('You cannot add your own ID!');
-
-            if (!contacts.some(c => c.id === friendId)) {
-                contacts.push({ name: friendName, id: friendId });
-                localStorage.setItem('vibe_contacts', JSON.stringify(contacts));
-                renderContacts();
-            }
-
-            closeModal();
-            selectContact(friendId);
-        }
-
-        function renderContacts() {
-            const container = document.getElementById('contactsContainer');
-            container.innerHTML = '';
-
-            contacts.forEach(c => {
-                const userMsgs = messagesDB[c.id] || [];
-                let lastMsg = 'Click to chat';
-                if (userMsgs.length > 0) {
-                    const last = userMsgs[userMsgs.length - 1];
-                    if (last.msgType === 'image') lastMsg = '📷 Photo';
-                    else if (last.msgType === 'video') lastMsg = '🎥 Video';
-                    else lastMsg = last.text;
-                }
-
-                const item = document.createElement('div');
-                item.className = `contact-item ${activeFriendId === c.id ? 'active' : ''}`;
-                item.onclick = () => selectContact(c.id);
-
-                item.innerHTML = `
-                    <div class="avatar">${c.name.charAt(0).toUpperCase()}</div>
-                    <div class="contact-details">
-                        <div class="contact-title">
-                            <span>${c.name}</span>
-                        </div>
-                        <div class="last-msg">${lastMsg}</div>
-                    </div>
-                `;
-                container.appendChild(item);
-            });
-        }
-
-        function selectContact(friendId) {
-            activeFriendId = friendId;
-            const contact = contacts.find(c => c.id === friendId);
-
-            document.getElementById('emptyChatView').style.display = 'none';
-            document.getElementById('activeChatView').style.display = 'flex';
-
-            document.getElementById('activeAvatar').innerText = contact ? contact.name.charAt(0).toUpperCase() : '?';
-            document.getElementById('activeContactName').innerText = contact ? contact.name : friendId;
-            document.getElementById('activeContactId').innerText = 'ID: ' + friendId;
-
-            // Contact click hone par layout ko Full Screen View me switch karna
-            document.getElementById('appLayout').classList.add('full-chat');
-
-            if (!connections[friendId]) {
-                const conn = peer.connect('vibe-' + friendId, { reliable: true });
-                connections[friendId] = conn;
-
-                conn.on('data', (data) => {
-                    if (data.type === 'chat') {
-                        saveMessage(data.fromId, data.fromName, data.text, 'them', data.msgType, data.mediaUrl);
-                        if (activeFriendId === data.fromId) renderMessages();
-                    }
-                });
-            }
-
-            renderContacts();
-            renderMessages();
-        }
-
-        function goBackToContacts() {
-            document.getElementById('appLayout').classList.remove('full-chat');
-        }
-
-        function sendMessage(msgType = 'text', mediaUrl = null) {
-            const input = document.getElementById('messageInput');
-            const text = msgType === 'text' ? input.value.trim() : '';
-            if ((!text && !mediaUrl) || !activeFriendId) return;
-
-            const payload = {
-                type: 'chat',
-                fromName: currentUser.name,
-                fromId: currentUser.id,
-                text: text,
-                msgType: msgType,
-                mediaUrl: mediaUrl
-            };
-
-            const conn = connections[activeFriendId];
-
-            if (conn && conn.open) {
-                conn.send(payload);
-            } else {
-                const newConn = peer.connect('vibe-' + activeFriendId, { reliable: true });
-                connections[activeFriendId] = newConn;
-                newConn.on('open', () => {
-                    newConn.send(payload);
-                });
-            }
-
-            saveMessage(activeFriendId, currentUser.name, text, 'me', msgType, mediaUrl);
-            if (msgType === 'text') input.value = '';
-            renderMessages();
-            renderContacts();
-        }
-
-        function handleFileSelect(e) {
-            const file = e.target.files[0];
-            if (!file) return;
-
-            const reader = new FileReader();
-            reader.onload = function(event) {
-                const base64Data = event.target.result;
-                const isVideo = file.type.startsWith('video');
-                sendMessage(isVideo ? 'video' : 'image', base64Data);
-            };
-            reader.readAsDataURL(file);
-            e.target.value = '';
-        }
-
-        function saveMessage(friendId, senderName, text, type, msgType = 'text', mediaUrl = null) {
-            if (!messagesDB[friendId]) messagesDB[friendId] = [];
-
-            const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            messagesDB[friendId].push({ text, type, time, msgType, mediaUrl });
-
-            localStorage.setItem('vibe_messages', JSON.stringify(messagesDB));
-        }
-
-        function renderMessages() {
-            const container = document.getElementById('chatMessages');
-            container.innerHTML = '';
-
-            const list = messagesDB[activeFriendId] || [];
-
-            list.forEach(msg => {
-                const div = document.createElement('div');
-                div.className = `msg-bubble ${msg.type}`;
+        // Smooth Female Voice Output Engine
+        function speak(text) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel(); // Stop ongoing speech
                 
-                let contentHTML = '';
-                if (msg.msgType === 'image') {
-                    contentHTML += `<img src="${msg.mediaUrl}" alt="Sent Image">`;
-                } else if (msg.msgType === 'video') {
-                    contentHTML += `<video src="${msg.mediaUrl}" controls></video>`;
-                }
+                const utterance = new SpeechSynthesisUtterance(text);
+                const voices = window.speechSynthesis.getVoices();
+                
+                // Prioritize smooth high-quality female voices
+                const femaleVoice = voices.find(v => 
+                    v.name.includes("Google US English") || 
+                    v.name.includes("Samantha") || 
+                    v.name.includes("Zira") || 
+                    v.name.includes("Victoria") ||
+                    v.name.toLowerCase().includes("female")
+                );
 
-                if (msg.text) contentHTML += `<div>${msg.text}</div>`;
-                contentHTML += `<div class="msg-time">${msg.time}</div>`;
+                if (femaleVoice) utterance.voice = femaleVoice;
 
-                div.innerHTML = contentHTML;
-                container.appendChild(div);
-            });
-
-            container.scrollTop = container.scrollHeight;
-        }
-
-        function deleteChat() {
-            if (!activeFriendId) return;
-            if (confirm("Delete all chat messages with this contact?")) {
-                delete messagesDB[activeFriendId];
-                localStorage.setItem('vibe_messages', JSON.stringify(messagesDB));
-                renderMessages();
-                renderContacts();
+                utterance.pitch = 1.15; // Slightly elevated soft tone
+                utterance.rate = 0.98;   // Smooth natural cadence
+                
+                window.speechSynthesis.speak(utterance);
             }
         }
 
-        function deleteContact() {
-            if (!activeFriendId) return;
-            if (confirm("Permanently delete this contact?")) {
-                contacts = contacts.filter(c => c.id !== activeFriendId);
-                localStorage.setItem('vibe_contacts', JSON.stringify(contacts));
+        // Preload synthesis voices
+        window.speechSynthesis.onvoiceschanged = () => { window.speechSynthesis.getVoices(); };
 
-                delete messagesDB[activeFriendId];
-                localStorage.setItem('vibe_messages', JSON.stringify(messagesDB));
+        async function sendMessage() {
+            const inputField = document.getElementById("userInput");
+            const chatBox = document.getElementById("chatBox");
+            const userText = inputField.value.trim();
 
-                activeFriendId = null;
-                document.getElementById('activeChatView').style.display = 'none';
-                document.getElementById('emptyChatView').style.display = 'flex';
+            if (!userText) return;
 
-                goBackToContacts();
-                renderContacts();
+            // Render User Message
+            chatBox.innerHTML += `
+                <div class="message-wrapper user-wrapper">
+                    <div class="avatar user-avatar"><i class="fa-solid fa-user"></i></div>
+                    <div class="message user">${userText}</div>
+                </div>
+            `;
+            
+            inputField.value = "";
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            // Render Animated Typing Dots
+            const loadingId = 'loading-' + Date.now();
+            chatBox.innerHTML += `
+                <div class="message-wrapper bot-wrapper" id="${loadingId}">
+                    <div class="avatar bot-avatar"><i class="fa-solid fa-sparkles"></i></div>
+                    <div class="message bot typing-indicator">
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                    </div>
+                </div>
+            `;
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            try {
+                const response = await fetch("/generate", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ prompt: userText })
+                });
+
+                const data = await response.json();
+                const botMessage = data.response;
+
+                // Replace typing indicator with actual response
+                const loadingElem = document.getElementById(loadingId);
+                loadingElem.querySelector('.message').innerHTML = botMessage;
+                loadingElem.querySelector('.message').classList.remove('typing-indicator');
+
+                // Trigger Female Speech Engine
+                speak(botMessage);
+
+            } catch (err) {
+                const errorText = "I encountered a connection glitch. Please try again.";
+                const loadingElem = document.getElementById(loadingId);
+                loadingElem.querySelector('.message').innerText = errorText;
+                loadingElem.querySelector('.message').classList.remove('typing-indicator');
+                speak(errorText);
             }
-        }
-
-        function handleKeyPress(e) {
-            if (e.key === 'Enter') sendMessage();
+            
+            chatBox.scrollTop = chatBox.scrollHeight;
         }
     </script>
 </body>
