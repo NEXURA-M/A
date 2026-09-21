@@ -1,6 +1,6 @@
 # TinyLlama AI Agent
 
 ### 🚀 Live Demo (Auto-Updated Every 6 Hours)
-**Active URL:** [https://trials-attempts-lamb-fabulous.trycloudflare.com](https://trials-attempts-lamb-fabulous.trycloudflare.com)
+**Active URL:** [https://anne-price-thompson-balanced.trycloudflare.com](https://anne-price-thompson-balanced.trycloudflare.com)
 
-_Last Updated: Sun Sep 20 20:07:06 UTC 2026_
+_Last Updated: Mon Sep 21 02:42:30 UTC 2026_
